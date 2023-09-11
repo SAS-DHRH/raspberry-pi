@@ -22,14 +22,14 @@ Curiosity and enthusiasm. No prior experience of Raspberry Pi, command line, pro
 
 ### 1. Raspberry Pi 
 
-* Raspberry Pi 3B+/4B ([check availability](https://rpilocator.com/?country=UK))
+* Raspberry Pi 3B+/4B or Pi Zero W/WH/2W ([check availability](https://rpilocator.com/?country=UK))
+* If using Raspberry Pi Zero W/2W, 40-pin header
 * Power supply for Raspberry Pi
 * MicroSD card (64GB or larger, U1/C10 or above), or if using the Pi 4B board, USB Flash drive or external HD (500GB or smaller) would work too.
-* Display + full-size HDMI cable (Pi 3B+) or micro HDMI cable/adaptor (Pi 4B) 
-* Keyboard (cabled or Bluetooth) 
-* Mouse (cabled or Bluetooth) 
 * Speaker (3.5mm AUX input or Bluetooth) 
 * Optionally, heatsink and/or fan
+
+For installation, setup and system administration, you will also need a display monitor, keyboard and mouse.
 
 ### 2. NFC/RFID module
 
