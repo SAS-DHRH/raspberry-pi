@@ -6,9 +6,9 @@ The following are some of popular solutions (in alphabetical order). Those marke
 
 ### Open source or free
 
-* [Chromium](./chromium.md)
+* [Chromium](./Chromium-X11.md)
 * [Flutter Pi](https://github.com/ardera/flutter-pi)
-* [FullPageOS](https://github.com/guysoft/FullPageOS)\*
+* [FullPageOS](./FullPageOS.md)\*
 * [OpenKiosk](https://openkiosk.mozdevgroup.com/)
 * [Pi Presents](https://github.com/KenT2/pipresents-gapless)
 * [PiSinage](https://github.com/colloqi/pisignage)
@@ -17,9 +17,10 @@ The following are some of popular solutions (in alphabetical order). Those marke
 
 ### Freemium or paid
 
+* [1play](https://1play.tv)\*
 * [info-beamer](https://info-beamer.com)\*
 * [kiosk](https://www.kiosk.show)
-* [Screenly](https://www.screenly.io)\*
+* [Screenly](https://www.screenly.io)
 * [XOGO](https://www.xogo.io/getting-started)\*
 * [Yodeck](https://www.yodeck.com)\*
 
