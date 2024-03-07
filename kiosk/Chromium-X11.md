@@ -8,7 +8,7 @@ Raspberry Pi OS configured to automatically boot into a full page web kiosk mode
 
 * Raspberry Pi 3B/3B+/4B or Raspberry Pi Zero W/WH/2W
 * Power supply for Raspberry Pi
-* MicroSD card
+* MicroSD card  (8GB or 16GB is generally sufficient)
 * MicroSD card reader
 * Display screen/monitor
 * Power supply for the display screen/monitor
@@ -41,14 +41,14 @@ For installation, setup and system administration, you will also need a keyboard
 
    **GENERAL**
 
-   - **Set hostname**: Enter a name for your Raspberry Pi. The name can be anything but should only contain alphabet, number and dash characters e.g. `kiosk-pi`.
+   - **Set hostname**: Enter a name for your Raspberry Pi. The name can be anything but should only contain alphabet, number and dash characters e.g. `kiosk`.
 
    * **Set username and password**
 
      * **Username**: Enter your choice of username e.g. `pi`.
      * **Password**: Enter your choice of password e.g. `letmein!23`.
 
-     > **Note**: During OS installation, a user account will be created on your Raspberry Pi based on the information you provide here, and you will be using the username and password to log in to that user account on your Raspberry Pi.
+     During OS installation, a user account will be created on your Raspberry Pi based on the information you provide here, and you will be using the username and password to log in to that user account on your Raspberry Pi.
 
    * **Configure wireless LAN**
 
@@ -67,17 +67,17 @@ For installation, setup and system administration, you will also need a keyboard
 
       * **Use password authentication**: Select this option.
 
-1. Upon returning to the **Use OS customisation?** prompt window, select **YES** to applying your OS customisation settings.
+1. On returning to the **Use OS customisation?** prompt window, select **YES** to applying your OS customisation settings.
 
 1. Select **YES** to erasing all existing data on your MicroSD card. If Raspberry Pi Imager asks you for a password, enter the password you use to log into your computer (not the password you set for your Raspberry Pi).
 
-1. Once Raspberry Pi Imager has finished flashing Raspberry Pi OS to your MicroSD card, eject the card from your computer. Raspberry Pi Imager is by default set to eject media automatically - if you don't see your MicroSD card mounted on your Desktop or in Finder/File Explorer, you can simply remove it from the MicroSD card reader.
+1. Once Raspberry Pi Imager has finished flashing Raspberry Pi OS to your MicroSD card, eject the card from your computer. Raspberry Pi Imager is by default configured to eject media automatically - if you don't see your MicroSD card mounted on your Desktop or in Finder/File Explorer, you can simply remove it from your MicroSD card reader.
 
 ### 2. Install Raspberry Pi OS on Raspberry Pi
 
 The examples in the following steps will use Raspberry Pi OS configured with:
 
-- **Hostname**: kiosk-pi
+- **Hostname**: kiosk
 - **Username**: pi
 - **Password**: letmein!23
 
@@ -90,9 +90,9 @@ The examples in the following steps will use Raspberry Pi OS configured with:
 4. Once your Raspberry Pi has completed booting up (this may take 3-5 minutes the first time around), you should see a login prompt like the following:
 
    ```bash
-   Raspibian GNU/Linux 12 kiosk-pi tty1
+   Raspibian GNU/Linux 12 kiosk tty1
    
-   kiosk-pi login:
+   kiosk login:
    ```
 
 5. Log into your Raspberry Pi.
@@ -100,7 +100,7 @@ The examples in the following steps will use Raspberry Pi OS configured with:
    Type your username and press the **Enter** key, e.g.
 
    ```bash
-   kiosk-pi login: pi
+   kiosk login: pi
    ```
 
    You will then be asked for a password. Type your password and press the **Enter** key, e.g.
@@ -112,7 +112,7 @@ The examples in the following steps will use Raspberry Pi OS configured with:
 6. You should now see a command prompt like this:
 
    ```bash
-   pi@kiosk-pi:~$
+   pi@kiosk:~$
    ```
 
 ### 3. Update Raspberry Pi OS (optional, recommended)
@@ -137,7 +137,7 @@ The examples in the following steps will use Raspberry Pi OS configured with:
 
 ### 4. Configure Raspberry Pi OS
 
-1. Start the raspi-config tool.
+1. Start the **raspi-config Tool**.
 
    ```bash
    sudo raspi-config
@@ -199,100 +199,115 @@ As we did in the previous step, we are using the `--no-install-recommends` optio
 
 ### 7. Set up kiosk mode
 
-   1. Create a new file in your home directory and name it `.xinitrc` (note that the name starts with a dot):
+#### Configure X Window System server
+
+1. Open the `.xinitrc` file located in your home directory:
 
       ```bash
       nano ~/.xinitrc
       ```
 
-      The `.xinitrc` file is automatically used and executed by `startx` (and `xinit`) when it is present in a user's home directory (note: it will be ignored if it is located elsewhere!). We'll leverage this and put the kiosk display configurations and the command to launch Chromium in the file.
+      Don't worry if the file doesn't exist already, the command will still work, and `nano` (a command line text editor) will create a new file named `.xinitrc` when you save the file.
 
-   1. Add display settings:
+      The `.xinitrc` file is automatically used and executed by `startx` (and `xinit`) when it is present in a user's home directory (note: it will be ignored if it is located elsewhere!). We'll leverage this and put in the file the kiosk display configurations and the command to launch Chromium.
 
-      ```bash
-      ## Display settings
-      xset -dpms      # turn off display power management
-      xset s noblank  # turn off screen blanking
-      xset s off      # turn off screen saver
-      ```
-   1. Add X server settings:
+1. Add display settings:
 
-      ```bash
-      ## X server settings
-      setxkbmap -option terminate:ctrl_alt_bksp # allow termination with Ctrl+Alt+Backspace key combo
-      ```
+   ```bash
+   # Display settings
+   xset -dpms      # turn off display power management
+   xset s noblank  # turn off screen blanking
+   xset s off      # turn off screen saver
+   ```
 
-   1. Add Chromium settings:
+1. Add X server settings:
 
-      ```bash
-      ## Chromium settings
-      # Prevent Chromium from throwing flags or pop-up warning bars upon error             
-      sed -i 's/"exited_cleanly":false/"exited_cleanly":true/' ~/.config/chromium/Default/Preferences
-      sed -i 's/"exit_type":"Crashed"/"exit_type":"Normal"/' ~/.config/chromium/Default/Preferences
-      ```
+   ```bash
+   # X server settings
+   setxkbmap -option terminate:ctrl_alt_bksp # allow termination with Ctrl+Alt+Backspace key combo
+   ```
 
-   1. Add the command to launch Chromium in kiosk mode:
+1. Add window settings:
 
-      ```bash
-      ## Launch Chromium
-      # Get screen width and height
-      GEOMETRY="$(fbset -s | awk '$1 == "geometry" { print $2":"$3 }')"
-      WIDTH=$(echo "$GEOMETRY" | cut -d: -f1)
-      HEIGHT=$(echo "$GEOMETRY" | cut -d: -f2)
-      
-      unclutter & 
-      chromium-browser $KIOSK_URL \
-         --kiosk \
-         --incognito \
-         --start-fullscreen \
-         --start-maximized \
-         --window-position=0,0 \
-         --window-size=$WIDTH,$HEIGHT \
-         --no-default-browser-check \
-         --noerrdialogs \
-         --no-first-run \
-         --disable-infobars \
-         --disable-pinch \
-         --disable-features=TranslateUI \
-         --overscroll-history-navigation=0 \
-         --disk-cache-dir=/dev/null \
-         --check-for-update-interval=31536000
-      ```
+   ```bash
+   # Window settings
+   # Get the width and height of available presentation space for the display monitor attached.
+   GEOMETRY="$(fbset -s | awk '$1 == "geometry" { print $2":"$3 }')"
+   WINDOW_WIDTH=$(echo "$GEOMETRY" | cut -d: -f1)
+   WINDOW_HEIGHT=$(echo "$GEOMETRY" | cut -d: -f2)
+   ```
 
-      `$KIOSK_URL` should be typed as it is i.e. as an environmental variable name. Do not replace it with the actual URL to display. We'll be setting a value for the variable in a more appropriate place shortly.
+1. Add Chromium settings:
 
-      Adjust Chromium arguments as required, see [Run Chromium with command-line switches](https://www.chromium.org/developers/how-tos/run-chromium-with-flags/) and [List of Chromium command line switches](https://peter.sh/experiments/chromium-command-line-switches/).
+   ```bash
+   # Chromium settings
+   # Prevent Chromium from throwing flags or pop-up warning bars upon error             
+   sed -i 's/"exited_cleanly":false/"exited_cleanly":true/' ~/.config/chromium/Default/Preferences
+   sed -i 's/"exit_type":"Crashed"/"exit_type":"Normal"/' ~/.config/chromium/Default/Preferences
+   ```
 
-   1. Put all together, the content of the `.xinitrc` file should now look like this:
+1. Add the command to launch Chromium in kiosk mode:
+
+   ```bash
+   # Set the mouse cursor to hide after 10 seconds of inactivity (optional)
+   unclutter &
+   
+   # Launch Chromium
+   chromium-browser $KIOSK_URL \
+      --kiosk \
+      --incognito \
+      --start-fullscreen \
+      --start-maximized \
+      --window-position=0,0 \
+      --window-size=$WINDOW_WIDTH,$WINDOW_HEIGHT \
+      --no-default-browser-check \
+      --noerrdialogs \
+      --no-first-run \
+      --disable-infobars \
+      --disable-pinch \
+      --disable-features=TranslateUI \
+      --overscroll-history-navigation=0 \
+      --disk-cache-dir=/dev/null \
+      --check-for-update-interval=31536000
+   ```
+
+   `$KIOSK_URL`, `$WINDOW_WIDTH` and `$WINDOW_HEIGHT` should all be typed as they are.
+
+   Adjust Chromium arguments as required, see [Run Chromium with command-line switches](https://www.chromium.org/developers/how-tos/run-chromium-with-flags/) and [List of Chromium command line switches](https://peter.sh/experiments/chromium-command-line-switches/).
+
+1. Put all together, the content of your `.xinitrc` file should now look like this:
 
       ```bash      
-      ## Display settings
+      # Display settings
       xset -dpms      # turn off display power management
       xset s noblank  # turn off screen blanking
       xset s off      # turn off screen saver
       
-      ## X server settings
+      # X server settings
       setxkbmap -option terminate:ctrl_alt_bksp # allow termination with the Ctrl+Alt+Backspace key combo
       
-      ## Chromium settings
+      # Window settings
+      # Get the width and height of available presentation space for the display monitor attached.
+      GEOMETRY="$(fbset -s | awk '$1 == "geometry" { print $2":"$3 }')"
+      WINDOW_WIDTH=$(echo "$GEOMETRY" | cut -d: -f1)
+      WINDOW_HEIGHT=$(echo "$GEOMETRY" | cut -d: -f2)
+      
+      # Chromium settings
       # Prevent Chromium from throwing flags or pop-up warning bars upon error                   
       sed -i 's/"exited_cleanly":false/"exited_cleanly":true/' ~/.config/chromium/Default/Preferences
       sed -i 's/"exit_type":"Crashed"/"exit_type":"Normal"/' ~/.config/chromium/Default/Preferences
       
-      ## Launch Chromium
-      # Get screen width and height
-      GEOMETRY="$(fbset -s | awk '$1 == "geometry" { print $2":"$3 }')"
-      WIDTH=$(echo "$GEOMETRY" | cut -d: -f1)
-      HEIGHT=$(echo "$GEOMETRY" | cut -d: -f2)
+      # Set the mouse cursor to hide after 10 seconds of inactivity (optional)
+      unclutter &
       
-      unclutter & 
+      # Launch Chromium
       chromium-browser $KIOSK_URL \
          --kiosk \
          --incognito \
          --start-fullscreen \
          --start-maximized \
          --window-position=0,0 \
-         --window-size=$WIDTH,$HEIGHT \
+         --window-size=$WINDOW_WIDTH,$WINDOW_HEIGHT \
          --no-default-browser-check \
          --noerrdialogs \
          --no-first-run \
@@ -304,69 +319,65 @@ As we did in the previous step, we are using the `--no-install-recommends` optio
          --check-for-update-interval=31536000
       ```
 
-   1. Press the **Ctrl**+**X** keys, type **Y** to save the changes, and press the **Enter** key to confirm.
+1. Press the **Ctrl**+**X** keys, type **Y** to save the changes, and press the **Enter** key to confirm the file name to write and close the file.
 
-   1. Set a value for the envrionmental variable KIOSK_URL.
+#### Configure kiosk URL and autostart
 
-      1. Open the `.bash_profile` file (note that the name starts with a dot):
+1. Open the `.bash_profile` file located in your home directory:
 
-         ```bash
-         nano ~/.bash_profile
-         ```
-         
-         Note: Don't worry if the file doesn't exist yet, the above command will still work and create a new file named `.bash_profile` to be saved in your home directory.
+   ```bash
+   nano ~/.bash_profile
+   ```
 
-         The `.bash_profile` file is a bash script file which is automatically executed upon login when it is present in a user's home directory (note: it will be ignored if it is located elsewhere!). It is mainly used to set user-specific custom configurations for a terminal session, such as the environment variable for the user or define scripts to perform the automated tasks at the startup.
+   Don't worry if the file doesn't exist already, the command will still work, and `nano` (a command line text editor) will create a new file named `.bash_profile` when you save the file.
 
-      1. Add the following line, replacing the `<KIOSK_URL>` placeholder with the URL of a webpage to display in kiosk mode:
+   The `.bash_profile` file is a bash script file which is automatically executed upon login when it is present in a user's home directory (note: it will be ignored if it is located elsewhere!). It is mainly used to set user-specific custom configurations for a terminal session, such as the environment variable for the user or define scripts to perform the automated tasks at the startup.
 
-         ```bash
-         # Set environmental variable
-         export KIOSK_URL=<KIOSK_URL>
-         ```
+2. Set the URL of the webpage to display in kiosk mode.
 
-         Example:
+   Add the following line, replacing the `<KIOSK_URL>` placeholder with the URL of the webpage you wish to display:
 
-         ```bash
-         # Set KIOSK_URL
-         export KIOSK_URL=https://www.london.ac.uk/about/services/senate-house-library/exhibitions/shakespeares-first-folios-400-year-journeys
-         ```
+   ```bash
+   # Set the URL of the webpage to display in kiosk mode
+   export KIOSK_URL=<KIOSK_URL>
+   ```
 
-      1. Press the **Ctrl**+**X** keys, type **Y** to save the changes, and press the **Enter** key to confirm.
+   Example:
 
-         If you are following the installation step-by-step, then you can keep the `.bash_prfoile` open as we'll be adding another line to it in the next step.
+   ```bash
+   # Set KIOSK_URL
+   export KIOSK_URL=https://www.london.ac.uk/about/services/senate-house-library/exhibitions/shakespeares-first-folios-400-year-journey
+   ```
 
-### 8. Configure autostart
+3. Configure X server to start on boot.
 
-   1. Open the `.bash_profile` file:
+   - To start the kiosk mode with the mouse cursor disabled, add:
 
-      ```bash
-      nano ~/.bash_profile
-      ```
+     ```bash
+     # Start X server on boot, without the mouse cursor
+     [[ -z $DISPLAY && $XDG_VTNR -eq 1 ]] && startx -- -nocursor
+     ```
 
-      Note: Don't worry if the file doesn't exist yet, the command will still work and create a new file named `.bash_profile`.
+   - To start the kiosk mode with the mouse cursor enabled, add:
 
-   1. Add the following *AFTER* the enviromental variable is set:
+     ```bash
+     # Start X server on boot, with the mouse cursor
+     [[ -z $DISPLAY && $XDG_VTNR -eq 1 ]] && startx
+     ```
 
-      ```bash
-      # Start X server on boot, without the cursor
-      [[ -z $DISPLAY && $XDG_VTNR -eq 1 ]] && startx -- -nocursor
-      ```
+4. Put all together, the content of your `.bash_profile` file should now look like this:
 
-   1. The content of the `.bash_profile` file should now look like this:
+   ```bash
+   # Set environmental variable
+   export KIOSK_URL=https://www.london.ac.uk/about/services/senate-house-library/exhibitions/shakespeares-first-folios-400-year-journey
+   
+   # Start X server on boot, without the cursor
+   [[ -z $DISPLAY && $XDG_VTNR -eq 1 ]] && startx -- -nocursor
+   ```
 
-      ```bash
-      ## Set environmental variable
-      export KIOSK_URL=https://www.london.ac.uk/about/services/senate-house-library/exhibitions/shakespeares-first-folios-400-year-journey
-      
-      ## Start X server on boot, without the cursor
-      # To start with the cursor, remove ` -- -nocursor` so that it is just `startx`
-      [[ -z $DISPLAY && $XDG_VTNR -eq 1 ]] && startx -- -nocursor
-      ```
+5. Press the **Ctrl**+**X** keys, type **Y** to save the changes, and press the **Enter** key to confirm the file name to write and close the file.
 
-   1. Press the **Ctrl**+**X** keys, type **Y** to save the changes, and press the **Enter** key to confirm.
-
-### 9. Finally...
+### 8. Finally...
 
 Reboot your Raspberry Pi.
 
@@ -380,21 +391,21 @@ sudo reboot
 
 ### Start a terminal session
 
-1. Press the **Ctrl**+**Alt**+**[Fn]**+**F2** keys to switch to terminal.
-2. Log in with your username and password.
+1. Press the **Ctrl**+**Alt**+**F2** keys (some keyboards may also require the **Fn** key i.e. **Ctrl**+**Alt**+**Fn**+**F2**) to switch to terminal.
+2. Log in your Raspberry Pi with your username (e.g. `pi`) and password (e.g. `letmein!23`).
 
 To end the terminal session and switch back to kiosk display:
 
 1. Make sure to logout first by typing `logout` into the terminal window and pressing the **Enter** key.
-2. Press the **Ctrl**+**Alt**+**[Fn]**+**F1** keys.
+2. Press the **Ctrl**+**Alt**+**F1** keys (some keyboards may also require the **Fn** key i.e. **Ctrl**+**Alt**+**Fn**+**F1**).
 
 ### Safe shutdown
 
-Press the **[Fn]**+**esc** keys.
+Press the **Fn**+**esc** keys.
 
-Note: Raspberry Pi can be rebooted by unplugging from the power source and plugging back again, but this does not allow Raspberry Pi to shut down safely and can result in a corrupt MicroSD card or file system. It is strongly recommended that you shut down safely using the above method.
+Raspberry Pi can be rebooted by unplugging from the power source and plugging back again, but this does not allow Raspberry Pi to shut down safely and can result in a corrupt MicroSD card or file system. It is strongly recommended that you shut down safely using the above method.
 
-### Change the kiosk's URL
+### Change the URL of the webpage to display
 
 1. [Start a terminal session](#start-a-terminal-session), or [remote access your Raspberry Pi via SSH](#remote-access-your-raspberry-pi-via-ssh).
 
@@ -410,13 +421,41 @@ Note: Raspberry Pi can be rebooted by unplugging from the power source and plugg
    export KIOSK_URL=<CURRENT_KIOSK_URL>
    ```
 
-1. Press the **Ctrl**+**x** keys, type **Y** to save the changes, and press the **Enter** key to confirm.
+1. Press the **Ctrl**+**x** keys, type **Y** to save the changes, and press the **Enter** key to confirm the file name to write and close the file.
 
 1. Reboot your Raspberry Pi.
 
    ```bash
    sudo reboot
    ```
+
+### Change the WiFi network
+
+1. [Start a terminal session](#start-a-terminal-session), or [remote access your Raspberry Pi via SSH](#remote-access-your-raspberry-pi-via-ssh).
+
+2. Start the **raspi-config Tool**.
+
+   ```bash
+   sudo raspi-config
+   ```
+
+3. Using the Up/Down key, select **System Options** and press the **Enter** key.
+
+4. Using the Up/Down key, select **Wireless LAN** and press the **Enter** key.
+
+5. Enter SSID (your WiFi network name) and press the **Enter** key.
+
+6. Enter passphrase (the password for your WiFi network, or leave blank for if you are using an open/unsecure WiFi network) and press **Enter** key.
+
+7. Once back in the main menu, using the Tab key, select **\<Finish>** and press the **Enter** key.
+
+### Remote access your Raspberry Pi via SSH
+
+See [Raspberry Pi documentation on remote access](https://www.raspberrypi.com/documentation/computers/remote-access.html), and how-to for [Windows](https://www.raspberrypi.com/documentation/computers/remote-access.html#secure-shell-from-windows-10) or [Linux/Mac](https://www.raspberrypi.com/documentation/computers/remote-access.html#secure-shell-from-linux-or-mac-os).
+
+<br />
+
+## Troubleshooting
 
 ### Reboot after Chromium or X server crashes
 
@@ -433,10 +472,6 @@ Note: Raspberry Pi can be rebooted by unplugging from the power source and plugg
    ```bash
    startx
    ```
-
-### Remote access your Raspberry Pi via SSH
-
-See [Raspberry Pi documentation on remote access](https://www.raspberrypi.com/documentation/computers/remote-access.html), and how-to for [Windows](https://www.raspberrypi.com/documentation/computers/remote-access.html#secure-shell-from-windows-10) or [Linux/Mac](https://www.raspberrypi.com/documentation/computers/remote-access.html#secure-shell-from-linux-or-mac-os).
 
 <br />
 
@@ -473,12 +508,12 @@ If the display content needs to be refreshed regularly e.g. to fetch and display
 
 * With timed autorefresh that depends on user activity/inactivity, such as at regular intervals but only refresh if the kiosk display is not being used (so as not to interrupt browsing) or to return the display to home page after a period of idleness, this is best achieved with javascript e.g. a Chrome exetension or built into the web site/app. But be very careful with Chrome extensions - only install from a trusted developer, or safer still, write your own extension.
 
-### Webpage
+### Display content/webpages
 
-* Avoid linking to external webpage.
-* Disable cookie consent on the webpage when access from the Raspberry Pi for displaying in kiosk mode.
-* Consider designing the website so that naviagation is possible with mouse/touch alone and without the keyboard.
-* On the web pages displayed, set the html lang (e.g. to 'en') to prevent Chromium from triggering page translation prompts.
+* Avoid linking to external URLs.
+* Allow bypassing of cookie consent when accessed from the Raspberry Pi for displaying in kiosk mode.
+* Consider designing the display content to support navigation with mouse/touch alone and without a keyboard.
+* Set the html lang (e.g. to 'en') to prevent Chromium from triggering page translation prompts.
 
 <br /><br />
 
