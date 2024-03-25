@@ -5,7 +5,7 @@ A kiosk is a dedicated fixed purpose digital display device with locked down use
 Examples used in our Raspberry Pi sessions and projects:
 
 * [Chromium (X11)](Chromium-X11.md)
-* [FullpageOS](FullPageOS.md)
+* [FullPageOS](FullPageOS.md)
 * [Seized Books Project Kiosk](Seized-Books-Project-Kiosk.md)
 
 The following are some of popular solutions (in alphabetical order). Those marked with asterik (\*) are Raspberry Pi distributions and can be installed using the [Raspberry Pi Imager](https://www.raspberrypi.com/software/).
