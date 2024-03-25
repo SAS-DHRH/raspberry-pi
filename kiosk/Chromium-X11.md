@@ -1,21 +1,30 @@
 # Chromium (X11 version)
 
-Raspberry Pi OS configured to automatically boot into a full page web kiosk mode. This Chromium-based solution is built from scratch and thus is highly customisable (build as you like!).
+Raspberry Pi OS configured to automatically boot into a full page web kiosk mode. This Chromium-based solution is built from scratch and is highly customisable (build as you like!).
 
 <br />
 
 ## Hardware
 
-* Raspberry Pi 3B/3B+/4B or Raspberry Pi Zero W/WH/2W
+* Raspberry Pi 3B/3B+/4B
 * Power supply for Raspberry Pi
-* MicroSD card  (8GB or 16GB is generally sufficient)
-* MicroSD card reader
-* Display screen/monitor
-* Power supply for the display screen/monitor
-* HDMI (Raspberry Pi 3) or Micro HDMI (Raspberry Pi 4) or Mini HDMI (Raspberry Pi Zero) cable
+* MicroSD card  (16GB or larger, U1/Class 10 recommended)
 * Optionally, heatsink and/or fan for Raspberry Pi
+* Display monitor
+* Power supply for the display monitor
+* HDMI cable for connecting Raspberry Pi to the display monitor
 
-For installation, setup and system administration, you will also need a keyboard.
+**Additionally for installation:**
+
+* Another computer (Windows, Mac or Linux)
+* MicroSD card reader
+* USB Keyboard
+* USB Mouse
+
+**Additionally for system administration and troubleshooting/debugging:**
+
+* USB Keyboard
+* USB Mouse
 
 <br />
 
@@ -63,11 +72,11 @@ For installation, setup and system administration, you will also need a keyboard
 
    **SERVICES**
 
-      * **Enable SSH**: Tick/check this option.
+      * **Enable SSH**: Select this option.
 
       * **Use password authentication**: Select this option.
 
-1. On returning to the **Use OS customisation?** prompt window, select **YES** to applying your OS customisation settings.
+1. On returning to the **Use OS customisation?** window, select **YES** to applying your OS customisation settings.
 
 1. Select **YES** to erasing all existing data on your MicroSD card. If Raspberry Pi Imager asks you for a password, enter the password you use to log into your computer (not the password you set for your Raspberry Pi).
 
@@ -85,7 +94,7 @@ The examples in the following steps will use Raspberry Pi OS configured with:
 
 2. Connect your Raspberry Pi to a display monitor, keyboard and mouse.
 
-3. Connect your Raspberry Pi to a power source and boot it up.
+3. Connect your Raspberry Pi to a power supply and boot it up.
 
 4. Once your Raspberry Pi has completed booting up (this may take 3-5 minutes the first time around), you should see a login prompt like the following:
 
@@ -115,7 +124,7 @@ The examples in the following steps will use Raspberry Pi OS configured with:
    pi@kiosk:~$
    ```
 
-### 3. Update Raspberry Pi OS (optional, recommended)
+### 3. Update Raspberry Pi OS
 
 1. Update the system package list.
 
@@ -129,7 +138,7 @@ The examples in the following steps will use Raspberry Pi OS configured with:
    sudo apt upgrade -y
    ```
 
-1. Reboot your Raspberry Pi.
+1. Reboot your Raspberry Pi (optional, recommended).
 
    ```bash
    sudo reboot
@@ -143,27 +152,33 @@ The examples in the following steps will use Raspberry Pi OS configured with:
    sudo raspi-config
    ```
 
+   > :bulb:Navigation within the raspi-config Tool is by keyboard:
+   >
+   > * Up/Down/Left/Right keys to select options.
+   > * Tab key to jump to and from options to actions (e.g. OK/Cancel/Back/Finish/Yes/No)
+   > * Enter key to set or confirm your preferences.
+
 1. Enable console autologin.
 
-   1. Using the Up/Down key, select **System Options** and press the **Enter** key.
+   1. Select **System Options** and press the Enter key.
 
-   1. Using the Up/Down key, select **Boot / Auto Login** and press the **Enter** key.
+   1. Select **Boot / Auto Login** and press the Enter key.
 
-   1. Using the Up/Down key, select **Console Autologin** and press the **Enter** key.
+   1. Select **Console Autologin** and press the Enter key.
 
-1. Disable overscan. 
+1. Disable display underscan (also referred to as 'overscan compensation').
 
-   1. Using the Up/Down key, select **Display Options** and press the **Enter** key.
+   1. Select **Display Options** and press the Enter key.
 
-   1. Using the Up/Down key, select **Underscan** and press the **Enter** key.
+   1. Select **Underscan** and press the Enter key.
 
-   1. When asked **Would you like to enable overscan compensation for HDMI-1?**, using the Tab key, select **\<No>** and press the **Enter** key.
+   1. When asked **Would you like to enable overscan compensation for HDMI-1?**, select **\<No>** and press the Enter key.
 
-   1. With **\<Ok>** selected, press the Enter key to confirm **Display overscan compensation for HDMI-1 is disabled**.
+   1. Confirm **Display overscan compensation for HDMI-1 is disabled** by pressing the Enter key.
 
-1. Once back in the main menu, using the Tab key, select **\<Finish>** and press the **Enter** key.
+1. Once back in the main menu, select **\<Finish>** and press the Enter key.
 
-1. When asked **Would you like to reboot now?**, using the Tab key, select **\<Yes>** and press the **Enter** key.
+1. When asked **Would you like to reboot now?**, select **\<Yes>** and press the Enter key.
 
 ### 5. Install Graphical User Interface (GUI) components
 
@@ -211,44 +226,28 @@ As we did in the previous step, we are using the `--no-install-recommends` optio
 
       The `.xinitrc` file is automatically used and executed by `startx` (and `xinit`) when it is present in a user's home directory (note: it will be ignored if it is located elsewhere!). We'll leverage this and put in the file the kiosk display configurations and the command to launch Chromium.
 
-1. Add display settings:
+1. Add the following to the file. You can skip the comments and/or add your own.
 
-   ```bash
+   ```bash      
    # Display settings
    xset -dpms      # turn off display power management
    xset s noblank  # turn off screen blanking
    xset s off      # turn off screen saver
-   ```
-
-1. Add X server settings:
-
-   ```bash
+   
    # X server settings
-   setxkbmap -option terminate:ctrl_alt_bksp # allow termination with Ctrl+Alt+Backspace key combo
-   ```
-
-1. Add window settings:
-
-   ```bash
+   setxkbmap -option terminate:ctrl_alt_bksp # allow termination with the Ctrl+Alt+Backspace key combo
+   
    # Window settings
    # Get the width and height of available presentation space for the display monitor attached.
    GEOMETRY="$(fbset -s | awk '$1 == "geometry" { print $2":"$3 }')"
    WINDOW_WIDTH=$(echo "$GEOMETRY" | cut -d: -f1)
    WINDOW_HEIGHT=$(echo "$GEOMETRY" | cut -d: -f2)
-   ```
-
-1. Add Chromium settings:
-
-   ```bash
+   
    # Chromium settings
-   # Prevent Chromium from throwing flags or pop-up warning bars upon error             
+   # Prevent Chromium from throwing flags or pop-up warning bars upon error                   
    sed -i 's/"exited_cleanly":false/"exited_cleanly":true/' ~/.config/chromium/Default/Preferences
    sed -i 's/"exit_type":"Crashed"/"exit_type":"Normal"/' ~/.config/chromium/Default/Preferences
-   ```
-
-1. Add the command to launch Chromium in kiosk mode:
-
-   ```bash
+   
    # Set the mouse cursor to hide after 10 seconds of inactivity (optional)
    unclutter &
    
@@ -274,50 +273,6 @@ As we did in the previous step, we are using the `--no-install-recommends` optio
    `$KIOSK_URL`, `$WINDOW_WIDTH` and `$WINDOW_HEIGHT` should all be typed as they are.
 
    Adjust Chromium arguments as required, see [Run Chromium with command-line switches](https://www.chromium.org/developers/how-tos/run-chromium-with-flags/) and [List of Chromium command line switches](https://peter.sh/experiments/chromium-command-line-switches/).
-
-1. Put all together, the content of your `.xinitrc` file should now look like this:
-
-      ```bash      
-      # Display settings
-      xset -dpms      # turn off display power management
-      xset s noblank  # turn off screen blanking
-      xset s off      # turn off screen saver
-      
-      # X server settings
-      setxkbmap -option terminate:ctrl_alt_bksp # allow termination with the Ctrl+Alt+Backspace key combo
-      
-      # Window settings
-      # Get the width and height of available presentation space for the display monitor attached.
-      GEOMETRY="$(fbset -s | awk '$1 == "geometry" { print $2":"$3 }')"
-      WINDOW_WIDTH=$(echo "$GEOMETRY" | cut -d: -f1)
-      WINDOW_HEIGHT=$(echo "$GEOMETRY" | cut -d: -f2)
-      
-      # Chromium settings
-      # Prevent Chromium from throwing flags or pop-up warning bars upon error                   
-      sed -i 's/"exited_cleanly":false/"exited_cleanly":true/' ~/.config/chromium/Default/Preferences
-      sed -i 's/"exit_type":"Crashed"/"exit_type":"Normal"/' ~/.config/chromium/Default/Preferences
-      
-      # Set the mouse cursor to hide after 10 seconds of inactivity (optional)
-      unclutter &
-      
-      # Launch Chromium
-      chromium-browser $KIOSK_URL \
-         --kiosk \
-         --incognito \
-         --start-fullscreen \
-         --start-maximized \
-         --window-position=0,0 \
-         --window-size=$WINDOW_WIDTH,$WINDOW_HEIGHT \
-         --no-default-browser-check \
-         --noerrdialogs \
-         --no-first-run \
-         --disable-infobars \
-         --disable-pinch \
-         --disable-features=TranslateUI \
-         --overscroll-history-navigation=0 \
-         --disk-cache-dir=/dev/null \
-         --check-for-update-interval=31536000
-      ```
 
 1. Press the **Ctrl**+**X** keys, type **Y** to save the changes, and press the **Enter** key to confirm the file name to write and close the file.
 
@@ -397,7 +352,7 @@ sudo reboot
 To end the terminal session and switch back to kiosk display:
 
 1. Make sure to logout first by typing `logout` into the terminal window and pressing the **Enter** key.
-2. Press the **Ctrl**+**Alt**+**F1** keys (some keyboards may also require the **Fn** key i.e. **Ctrl**+**Alt**+**Fn**+**F1**).
+2. Press the **Ctrl**+**Alt**+**F1** keys. Some keyboards may also require the **Fn** key i.e. **Ctrl**+**Alt**+**Fn**+**F1**.
 
 ### Safe shutdown
 
@@ -439,15 +394,21 @@ Raspberry Pi can be rebooted by unplugging from the power source and plugging ba
    sudo raspi-config
    ```
 
-3. Using the Up/Down key, select **System Options** and press the **Enter** key.
+   > :bulb:Navigation within the raspi-config Tool is by keyboard:
+   >
+   > * Up/Down/Left/Right keys to select options.
+   > * Tab key to jump to and from options to actions (e.g. OK/Cancel/Back/Finish/Yes/No)
+   > * Enter key to set or confirm your preferences.
 
-4. Using the Up/Down key, select **Wireless LAN** and press the **Enter** key.
+3. Select **System Options** and press the Enter key.
 
-5. Enter SSID (your WiFi network name) and press the **Enter** key.
+4. Select **Wireless LAN** and press the Enter key.
 
-6. Enter passphrase (the password for your WiFi network, or leave blank for if you are using an open/unsecure WiFi network) and press **Enter** key.
+5. Enter SSID (your WiFi network name) and press the Enter key.
 
-7. Once back in the main menu, using the Tab key, select **\<Finish>** and press the **Enter** key.
+6. Enter passphrase (the password for your WiFi network, or leave blank for if you are using an open/unsecure WiFi network) and press Enter key.
+
+7. Once back in the main menu, select **\<Finish>** and press the Enter key.
 
 ### Remote access your Raspberry Pi via SSH
 
@@ -500,13 +461,13 @@ The function keys on external/physical keyboards can be re-mapped (e.g. to do no
 
 Similarly, the mouse functions are active, although the cursor is disabled and not visible on screen.
 
-### Autorefresh
+### Autorefresh/Autoreset
 
-If the display content needs to be refreshed regularly e.g. to fetch and display realtime data:
+If the display content needs to be regularly refreshed (e.g. to fetch and display realtime data) or reset (e.g. to a specific URL):
 
-* Timed autorefresh can be scheduled with a cron job and using `xdotool`, a command line tool with which keyboard input like the shift+ctrl+r or shift+F5 hotkeys can be programatically simulated.
+* Timed autorefresh/autoreset can be scheduled with a cron job and using `xdotool`, a command line tool with which keyboard input like the shift+ctrl+r or shift+F5 hotkeys can be programatically simulated.
 
-* With timed autorefresh that depends on user activity/inactivity, such as at regular intervals but only refresh if the kiosk display is not being used (so as not to interrupt browsing) or to return the display to home page after a period of idleness, this is best achieved with javascript e.g. a Chrome exetension or built into the web site/app. But be very careful with Chrome extensions - only install from a trusted developer, or safer still, write your own extension.
+* Where timed autorefresh/autoreset depends on a period of user inactivity, it is best achieved with JavaScript, either implemented as a Chrome exetension or built into the web site/app. Be very careful with Chrome extensions - only install from a trusted developer.
 
 ### Display content/webpages
 

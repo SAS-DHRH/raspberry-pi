@@ -6,16 +6,25 @@
 
 ## Hardware
 
-* Raspberry Pi 3B/3B+/4B or Raspberry Pi Zero W/WH/2W
+* Raspberry Pi 3B/3B+/4B
 * Power supply for Raspberry Pi
-* MicroSD card (8GB or 16GB should be sufficient)
-* MicroSD card reader
-* Display screen/monitor
-* Power supply for the display screen/monitor
-* HDMI (Raspberry Pi 3) or Micro HDMI (Raspberry Pi 4) or Mini HDMI (Raspberry Pi Zero) cable
+* MicroSD card  (16GB or larger, U1/Class 10 recommended)
 * Optionally, heatsink and/or fan for Raspberry Pi
+* Display monitor
+* Power supply for the display monitor
+* HDMI cable for connecting Raspberry Pi to the display monitor
 
-For installation, setup and system administration, you will also need another computer.
+**Additionally for installation:**
+
+* Another computer (Windows, Mac or Linux)
+* MicroSD card reader
+* USB Keyboard
+* USB Mouse
+
+**Additionally for system administration and troubleshooting/debugging:**
+
+* USB Keyboard
+* USB Mouse
 
 <br />
 
@@ -74,7 +83,9 @@ For installation, setup and system administration, you will also need another co
       - fullpageos.txt
       - Fullpagedashboard.txt
 
-1. Open **fullpageos-wpa-supplicant.txt** and configure your WiFi setting. Make sure you use a plain text editor, or a text editor in plain text mode, for this. Recommended text editors: Notepad++, SublimeText, VSCode, Atom.
+      *You will be editing these file next. Please make sure to use a plain text editor, or a text editor in plain text mode. Recommended text editors: Notepad++, SublimeText, VSCodium, VSCode.*
+
+1. Open **fullpageos-wpa-supplicant.txt** and configure your WiFi setting.
 
    If you are using a secure WiFi, uncomment the network setting under `##WPA/WPA2 secured` and replace the placeholder text with your own WiFi SSID (the name of your WiFi network e.g. 'Cats Cats Cats') and psk (the password for your WiFi network e.g. 'ilovecats') e.g.
 
@@ -129,13 +140,13 @@ For installation, setup and system administration, you will also need another co
 ### Start a terminal session
 
 1. Connect a keyboard to your Raspberry Pi.
-2. Press the **Ctrl**+**Alt**+**F2** keys  (some keyboards may also require the **Fn** key i.e. **Ctrl**+**Alt**+**Fn**+**F2**).
+2. Press the **Ctrl**+**Alt**+**F2** keys. Some keyboards may also require the **Fn** key i.e. **Ctrl**+**Alt**+**Fn**+**F2**.
 3. Log into your Raspberry Pi with your username (e.g. `pi`) and password (e.g. `letmein!23`).
 
 To end the terminal session and switch back to kiosk display:
 
 1. Make sure to logout first by typing `logout` into the terminal window and pressing the **Enter** key.
-2. Press the **Ctrl**+**Alt**+**F7** keys (some keyboards may also require the **Fn** key i.e. **Ctrl**+**Alt**+**Fn**+**F7**).
+2. Press the **Ctrl**+**Alt**+**F7** keys. Some keyboards may also require the **Fn** key i.e. **Ctrl**+**Alt**+**Fn**+**F7**.
 
 ### Safe shutdown
 

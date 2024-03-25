@@ -10,7 +10,7 @@
 * The kiosk will be placed in a public place (e.g. bookshop) and unattended.
 * The kiosk will be connected to a 'public' WiFi.
 * Remote access via SSH/VNC is not available, so troubleshooting/debugging will be done on-site and likley in-situ.
-* The website is hosted by ITDS/UoL. Kiosk-specific customization may be possible but should not be assumed, as it is subject to factors such as the wider use of the website, web development resources, timetable, etc.
+* Kiosk-specific customization to the exhibition website may be possible but should not be assumed, as it is subject to factors such as the wider use of the website, web development resources, timetable, etc.
 
 <br />
 
@@ -86,7 +86,7 @@
 
       * **Use password authentication**: Select this option.
 
-1. On returning to the **Use OS customisation?** prompt window, select **YES** to applying your OS customisation settings.
+1. On returning to the **Use OS customisation?** window, select **YES** to applying your OS customisation settings.
 
 1. Select **YES** to erasing all existing data on your MicroSD card. If Raspberry Pi Imager asks you for a password, enter the password you use to log into your computer (not the password you set for your Raspberry Pi).
 
@@ -96,7 +96,7 @@
 
 1. Insert your MicroSD card into your Raspberry Pi.
 2. Connect your Raspberry Pi to a display monitor, keyboard and mouse.
-3. Connect your Raspberry Pi to a power source and boot it up.
+3. Connect your Raspberry Pi to a power supply and boot it up.
 4. Once your Raspberry Pi has completed booting up (this may take 3-5 minutes the first time around), you should be automatically logged in and see the Desktop.
 
 
@@ -132,14 +132,20 @@
    sudo raspi-config
    ```
 
+   > :bulb:Navigation within the raspi-config Tool is by keyboard:
+   >
+   > * Up/Down/Left/Right keys to select options.
+   > * Tab key to jump to and from options to actions (e.g. OK/Cancel/Back/Finish/Yes/No)
+   > * Enter key to set or confirm your preferences.
+
 1. Switch to using the X11/Openbox window manager instead of Wayland/Wayfire.
 
-   1. Using the Up/Down key, select **Advanced Options** and press the Enter key.
-   1. Using the Up/Down key, select **Wayland** and press the Enter key.
-   1. Using the Up/Down key, select **X11** and press the Enter key.
-   1. With **\<Ok>** selected, press the Enter key to confirm **Openbox on X11 is active**.
-   1. Once back in the main menu, using the Tab key, select **\<Finish>** and press the Enter key.
-   1. When asked **Would you like to reboot now?**, using the Tab key, select **\<Yes>** and press the Enter key.
+   1. Select **Advanced Options** and press the Enter key.
+   1. Select **Wayland** and press the Enter key.
+   1. Select **X11** and press the Enter key.
+   1. Confirm **Openbox on X11 is active** by pressing the Enter key.
+   1. Once back in the main menu, select **\<Finish>** and press the Enter key.
+   1. When asked **Would you like to reboot now?**, select **\<Yes>** and press the Enter key.
 
 1. Once your Raspberry Pi is booted, start the **raspi-config Tool** again.
 
@@ -149,23 +155,23 @@
 
 1. Enable desktop autologin.
 
-   1. Using the Up/Down key, select **System Options** and press the Enter key.
-   1. Using the Up/Down key, select **Boot / Auto Login** and press the Enter key.
-   1. Using the Up/Down key, select **Desktop Autologin** and press the Enter key.
+   1. Select **System Options** and press the Enter key.
+   1. Select **Boot / Auto Login** and press the Enter key.
+   1. Select **Desktop Autologin** and press the Enter key.
 
 1. Disable display underscan (also referred to as 'overscan compensation').
 
-   1. Using the Up/Down key, select **Display Options** and press the Enter key.
+   1. Select **Display Options** and press the Enter key.
 
-   1. Using the Up/Down key, select **Underscan** and press the Enter key.
+   1. Select **Underscan** and press the Enter key.
 
-   1. When asked **Would you like to enable overscan compensation for HDMI-1?**, using the Tab key, select **\<No>** and press the Enter key.
+   1. When asked **Would you like to enable overscan compensation for HDMI-1?**, select **\<No>** and press the Enter key.
 
-   1. With **\<Ok>** selected, press the Enter key to confirm **Display overscan compensation for HDMI-1 is disabled**.
+   1. Confirm **Display overscan compensation for HDMI-1 is disabled** by pressing the Enter key.
 
-1. Once back in the main menu, using the Tab key, select **\<Finish>** and press the Enter key.
+1. Once back in the main menu, select **\<Finish>** and press the Enter key.
 
-1. When asked **Would you like to reboot now?**, using the Tab key, select **\<Yes>** and press the Enter key.
+1. When asked **Would you like to reboot now?**, select **\<Yes>** and press the Enter key.
 
 ### 6. Set up kiosk script
 
@@ -225,6 +231,7 @@
        --disable-infobars \
        --disable-pinch \
        --disable-features=TranslateUI \
+       --overscroll-history-navigation=0 \
        --disk-cache-dir=/dev/null \
        --check-for-update-interval=31536000
    ```
@@ -266,9 +273,9 @@ We will run the kiosk script we created in the previous step as a service which 
    After=graphical.target
    
    [Service]
+   Type=simple
    Environment=DISPLAY=:0.0
    Environment=XAUTHORITY=/home/<username>/.XAuthority  # Replace the placeholder <username> with your username here.
-   Type=simple
    ExecStart=/bin/bash /home/<username>/kiosk/kiosk.sh  # Replace the placeholder <username> with your username here.
    Restart=on-abort
    User=<username>   # Replace the placeholder <username> with your username here.
@@ -287,9 +294,9 @@ We will run the kiosk script we created in the previous step as a service which 
    After=graphical.target
    
    [Service]
+   Type=simple
    Environment=DISPLAY=:0.0
    Environment=XAUTHORITY=/home/pi/.XAuthority
-   Type=simple
    ExecStart=/bin/bash /home/pi/kiosk/kiosk.sh
    Restart=on-abort
    User=pi
@@ -319,9 +326,9 @@ sudo reboot
 
 ## Usage
 
-### Closing the kiosk window
+### Exit kiosk mode
 
-1. Close the kiosk window by pressing the **Ctrl+F4** keys. With some keyboards, you many need to press the **Fn** key as well i.e. **Ctrl+Fn+F4**.
+1. Press the **Ctrl+F4** keys. Some keyboards may also require the **Fn** key i.e. **Ctrl+Fn+F4**.
 
 2. Open a terminal winow, and stop the kiosk service.
 
@@ -329,34 +336,54 @@ sudo reboot
    sudo systemctl stop kiosk.service
    ```
 
-### Changing the kiosk URL
+### Re-enter kiosk mode
 
-1. If the kiosk is running, close the kiosk window and stop the kiosk service (see [Closing the kiosk window](#closing-the-kiosk-window)).
+Open a terminal window, and either:
 
-2. Open a terminal window and open the kiosk script in a terminal text editor.
+* Reboot your Raspberry Pi (recommended):
+
+  ```bash
+  sudo reboot
+  ```
+
+* Start the kiosk service without rebooting e.g. if you are debugging or testing any configuration changes you made:
+
+  ```bash
+  sudo systemctl start kiosk.service
+  ```
+
+### Change the kiosk URL
+
+1. If the kiosk is running, exit kiosk mode and stop the kiosk service (see [Usage](#usage)).
+
+2. If you have write-protection enabled for your MicroSD card, disable it (see [Security](#security)).
+
+3. Open a terminal window and open the kiosk script in a terminal text editor.
 
    ```bash
    nano $HOME/kiosk/kiosk.sh
    ```
 
-3. Update the following line, replacing the url value of the `KIOSK_URL` variable.
+4. Update the following line, replacing the url value of the `KIOSK_URL` variable.
 
    ```bash
    # Set kiosk URL
    KIOSK_URL="https://github.com/SAS-DHRH"
    ```
 
-4. Press the **Ctrl**+**X** keys, type **Y** to save the changes, and press the **Enter** key to confirm the file name to write and close the file.
+5. Press the **Ctrl**+**X** keys, type **Y** to save the changes, and press the **Enter** key to confirm the file name to write and close the file.
 
-5. If you have the Chrome extensions installed, update the reset URL via **Extention options** (see [Chrome extensions](#chrome-extensions)).
+6. If you have the Chrome extensions installed, update the reset URL via **Extention options** (see [Chrome extensions](#chrome-extensions)).
 
-6. Reboot your Raspberry Pi.
+7. Reboot your Raspberry Pi.
 
    ```bash
    sudo reboot
    ```
 
-### Managing the kiosk service
+8. If required, re-enable write-protection for your MicroSD card (see [Security](#security)).
+
+### Manage the kiosk service
 
 **Stop the service**
 
@@ -412,6 +439,10 @@ sudo systemctl is-enabled kiosk.service
 journalctl --unit=kiosk.service
 ```
 
+### Remote access your Raspberry Pi via SSH
+
+See [Raspberry Pi documentation on remote access](https://www.raspberrypi.com/documentation/computers/remote-access.html), and how-to for [Windows](https://www.raspberrypi.com/documentation/computers/remote-access.html#secure-shell-from-windows-10) or [Linux/Mac](https://www.raspberrypi.com/documentation/computers/remote-access.html#secure-shell-from-linux-or-mac-os).
+
 <br />
 
 ## Chrome extensions
@@ -425,9 +456,11 @@ These extensions are provided 'as is'. Chrome extensions are built with JavaScri
 
 ### Installation
 
-1. If the kiosk is running, close the kiosk window and stop the kiosk service (see [Usage](#usage)).
+1. If the kiosk is running, exit kiosk mode and stop the kiosk service (see [Usage](#usage)).
 
-2. Download the extension(s).
+2. If you have write-protection enabled for your MicroSD card, disable it (see [Security](#security)).
+
+3. Download the extension(s).
 
    1. If it doesn't exist already, create a folder named `chrome-extensions` in your `kiosk` folder.
 
@@ -465,47 +498,49 @@ These extensions are provided 'as is'. Chrome extensions are built with JavaScri
         unzip $HOME/kiosk/chrome-extensions/kiosk-idle-reset.zip -d $HOME/kiosk/chrome-extensions/kiosk-idle-reset
         ```
 
-3. Open a Chromium window, and go to **Manage extensions** by typing into the address bar `chrome://extensions`, or by opening Extensions menu by clicking the puzzle button:
+4. Open a Chromium window, and go to **Manage extensions** by typing into the address bar `chrome://extensions`, or by opening Extensions menu by clicking the puzzle button:
 
-   <img src=".assets/images/chrome-extensions/manage-extensions.png" alt="Manage Extensions" style="zoom:50%; border: 1px solid #ccc;" />
+   <kbd><img src=".assets/images/chrome-extensions/manage-extensions.png" alt="Manage Extensions" width="60%" /></kbd>
 
-4. Turn on **Developer mode**.
+5. Turn on **Developer mode**.
 
-   <img src=".assets/images/chrome-extensions/developer-mode-on.png" alt="Developer mode" style="zoom:50%; border: 1px solid #ccc;" />
+   <kbd><img src=".assets/images/chrome-extensions/developer-mode-on.png" alt="Developer mode" width="60%" /></kbd>
 
-5. Click on **Load unpacked**, and select the folder of the Chrome extension to install.
+6. Click on **Load unpacked**, and select the folder of the Chrome extension to install.
 
-   <img src=".assets/images/chrome-extensions/extension-load.png" alt="Load extension" style="zoom:50%; border: 1px solid #ccc;" />
+   <kbd><img src=".assets/images/chrome-extensions/extension-load.png" alt="Load extension" width="60%" /></kbd>
 
-6. Once the extension is loaded, click on **Details**.
+7. Once the extension is loaded, click on **Details**.
 
-   <img src=".assets/images/chrome-extensions/extension-details.png" alt="Extension details" style="zoom:50%; border: 1px solid #ccc;" />
+   <kbd><img src=".assets/images/chrome-extensions/extension-details.png" alt="Extension details" width="60%" /></kbd>
 
-7. Scroll down to the bottom of the details page, and find **Allow in Incognito** setting and enable it.
+8. Scroll down to the bottom of the details page, and find **Allow in Incognito** setting and enable it.
 
-   <img src=".assets/images/chrome-extensions/extension-details-incognito.png" alt="Incognito mode" style="zoom:50%; border: 1px solid #ccc;" />
+   <kbd><img src=".assets/images/chrome-extensions/extension-details-incognito.png" alt="Incognito mode" width="60%" /></kbd>
 
-8. Click open **Extension options**.
+9. Click open **Extension options**.
 
-   <img src=".assets/images/chrome-extensions/extension-details-options.png" alt="Extension options" style="zoom:50%; border: 1px solid #ccc;" />
+   <kbd><img src=".assets/images/chrome-extensions/extension-details-options.png" alt="Extension options" width="60%" /></kbd>
 
-9. Configure the extension and **Save**.
+10. Configure the extension and **Save**.
 
-   <img src=".assets/images/chrome-extensions/extension-details-options-configure.png" alt="Extension options" style="zoom:50%; border: 1px solid #ccc;" />
+   <kbd><img src=".assets/images/chrome-extensions/extension-details-options-configure.png" alt="Extension options" width="60%" /></kbd>
 
-10. Click **My extensions** menu in the sidebar and return to **Extensions** home page.
+11. Click **My extensions** menu in the sidebar and return to **Extensions** home page.
 
-11. Repeat steps 4-9 to install other extensions as needed.
+12. Repeat steps 4-9 to install other extensions as needed.
 
-12. Once all the exntesions are installed, turn off **Developer mode**.
+13. Once all the exntesions are installed, turn off **Developer mode**.
 
-    <img src=".assets/images/chrome-extensions/developer-mode-off.png" alt="Developer mode" style="zoom:50%; border: 1px solid #ccc;" />
+    <kbd><img src=".assets/images/chrome-extensions/developer-mode-off.png" alt="Developer mode" width="60%" /></kbd>
 
-13. Open a terminal window and reboot your Raspberry Pi.
+14. Open a terminal window and reboot your Raspberry Pi.
 
     ```bash
     sudo reboot
     ```
+
+15. If required, re-enable write-protection for your MicroSD card (see [Security](#security)).
 
 ### Notes
 
@@ -531,33 +566,35 @@ Raspberry Pi relies on power supply to startup. In order for Raspberry Pi to sta
 
 ### Installation
 
-1. If the kiosk is running, close the kiosk window and stop the kiosk service (see [Usage](#usage)).
+1. If the kiosk is running, exit kiosk mode and stop the kiosk service (see [Usage](#usage)).
 
-2. Set up a cron job.
+2. If you have write-protection enabled for your MicroSD card, disable it (see [Security](#security)).
 
-   1. Open the `crontab` file.
+3. Open the `crontab` file.
 
-      ```bash
-      sudo crontab -e
-      ```
+   ```bash
+   sudo crontab -e
+   ```
 
-      When you run this command for the first time, you will be prompted to select a editor. Unless you have a preference, select `/bin/nano`.
+   When you run this command for the first time, you will be prompted to select a editor. Unless you have a preference, select `/bin/nano`.
 
-   2. Add the following at the bottom of the file, adjusting the time as appropriate. The time should be supplied in the **hh:mm** format, and as 24-hour time e.g. 6am would be `06:00`, while 6pm would be `18:00`.
+4. Add the following at the bottom of the file, adjusting the time as appropriate. The time should be supplied in the **hh:mm** format, and as 24-hour time e.g. 6am would be `06:00`, while 6pm would be `18:00`.
 
-      ```bash
-      @reboot /sbin/shutdown -h 18:00
-      ```
+   ```bash
+   @reboot /sbin/shutdown -h 18:00
+   ```
 
-   3. Press the **Ctrl**+**X** keys, type **Y** to save the changes, and press the **Enter** key to confirm the file name to write and close the file.
+5. Press the **Ctrl**+**X** keys, type **Y** to save the changes, and press the **Enter** key to confirm the file name to write and close the file.
 
-   4. Reboot your Raspberry Pi.
+6. Reboot your Raspberry Pi.
 
-      ```bash
-      sudo reboot
-      ```
+   ```bash
+   sudo reboot
+   ```
 
-3. Set the timer plug/switch to turn the power supply off 10 minutes or so after your Raspberry Pi's shutdown time, and to turn it on again at your desired time.
+7. Set the timer plug/switch to turn the power supply off 10 minutes or so after your Raspberry Pi's shutdown time, and to turn it on again at your desired time.
+
+8. If required, re-enable write-protection for your MicroSD card (see [Security](#security)).
 
 <br />
 
@@ -675,21 +712,27 @@ The disable command is temporary and the USB ports will be enabled again after t
    sudo raspi-config
    ```
 
-1. Using the Up/Down key, select **Performance Options** and press the Enter key.
+   > :bulb:Navigation within the raspi-config Tool is by keyboard:
+   >
+   > * Up/Down/Left/Right keys to select options.
+   > * Tab key to jump to and from options to actions (e.g. OK/Cancel/Back/Finish/Yes/No)
+   > * Enter key to set or confirm your preferences.
 
-1. Using the Up/Down key, select **Overlay File System** and press the Enter key.
+1. Select **Performance Options** and press the Enter key.
 
-1. Using the Tab key, select **\<Yes>** to **Would you like the overlay file system to be enabled?** and press the Enter key.
+1. Select **Overlay File System** and press the Enter key.
 
-1. With **\<Ok>** selected, press the Enter key to confirm **The overlay file system is enabled**.
+1. When asked **Would you like the overlay file system to be enabled?**, select **\<Yes>** and press the Enter key.
 
-1. When asked **Would you like the boot partition to be write-protected?**, using the Tab key, select **\<Yes>** and press the Enter key.
+1. Confirm **The overlay file system is enabled** by pressing the Enter key.
 
-1. With **\<Ok>** selected, press the Enter key to confirm **The boot partition is read-only**.
+1. When asked **Would you like the boot partition to be write-protected?**, select **\<Yes>** and press the Enter key.
 
-1. Once back in the main menu, using the Tab key, select **\<Finish>** and press the Enter key.
+1. Confirm **The boot partition is read-only** by pressing the Enter key.
 
-1. When asked **Would you like to reboot now?**, using the Tab key, select **\<Yes>** and press the Enter key.
+1. Once back in the main menu, select **\<Finish>** and press the Enter key.
+
+1. When asked **Would you like to reboot now?**, select **\<Yes>** and press the Enter key.
 
 ##### Disable write-protection (make SD card writable)
 
@@ -699,19 +742,25 @@ The disable command is temporary and the USB ports will be enabled again after t
    sudo raspi-config
    ```
 
-1. Using the Up/Down key, select **Performance Options** and press the Enter key.
+   > :bulb:Navigation within the raspi-config Tool is by keyboard:
+   >
+   > * Up/Down/Left/Right keys to select options.
+   > * Tab key to jump to and from options to actions (e.g. OK/Cancel/Back/Finish/Yes/No)
+   > * Enter key to set or confirm your preferences.
 
-1. Using the Up/Down key, select **Overlay File System** and press the Enter key.
+1. Select **Performance Options** and press the Enter key.
 
-1. When asked **Would you like the overlay file system to be enabled?**, using the Tab key, select **\<No>** and press the Enter key.
+1. Select **Overlay File System** and press the Enter key.
 
-1. With **\<Ok>** selected, press the Enter key to confirm **The overlay file system is disabled**.
+1. When asked **Would you like the overlay file system to be enabled?**, select **\<No>** and press the Enter key.
 
-1. With **\<Ok>** selected, press the Enter key to confirm **The boot partition is currently read-only. This cannot be cnahged while an overlay file system is enabled**.
+1. Confirm **The overlay file system is disabled** by pressing the Enter key.
 
-1. Once back in the main menu, using the Tab key, select **\<Finish>** and press the Enter key.
+1. Confirm **The boot partition is currently read-only. This cannot be cnahged while an overlay file system is enabled** by pressing the Enter key.
 
-1. When asked **Would you like to reboot now?**, using the Tab key, select **\<Yes>** and press the Enter key.
+1. Once back in the main menu, select **\<Finish>** and press the Enter key.
+
+1. When asked **Would you like to reboot now?**, select **\<Yes>** and press the Enter key.
 
 1. Once rebooted, start the **raspi-config Tool** again.
 
@@ -719,21 +768,21 @@ The disable command is temporary and the USB ports will be enabled again after t
    sudo raspi-config
    ```
 
-1. Using the Up/Down key, select **Performance Options** and press the Enter key.
+1. Select **Performance Options** and press the Enter key.
 
-1. Using the Up/Down key, select **Overlay File System** and press the Enter key.
+1. Select **Overlay File System** and press the Enter key.
 
-1. Using the Tab key, select **\<No>** to **Would you like the overlay file system to be enabled?** and press the Enter key.
+1. When asked **Would you like the overlay file system to be enabled?**, select **\<No>** and press the Enter key.
 
-1. With **\<Ok>** selected, press the Enter key to confirm **The overlay file system is disabled**.
+1. Confirm **The overlay file system is disabled** by pressing the Enter key.
 
-1. Using the Tab key, select **\<No>** to **Would you like the boot partition to be write-protected?** and press the Enter key.
+1. When asked **Would you like the boot partition to be write-protected?**, select **\<No>** and press the Enter key.
 
-1. With **\<Ok>** selected, press the Enter key to confirm **The boot partition is writable**.
+1. Confirm **The boot partition is writable** by pressing the Enter key.
 
-1. Once back in the main menu, using the Tab key, select **\<Finish>** and press the Enter key.
+1. Once back in the main menu, select **\<Finish>** and press the Enter key.
 
-1. When asked **Would you like to reboot now?**, using the Tab key, select **\<Yes>** and press the Enter key.
+1. When asked **Would you like to reboot now?**, select **\<Yes>** and press the Enter key.
 
 <br />
 
@@ -741,23 +790,27 @@ The disable command is temporary and the USB ports will be enabled again after t
 
 ### Basic steps
 
-1. If the kiosk is running, close the kiosk window and stop the kiosk service (see [Usage](#usage)).
+1. If the kiosk is running, exit kiosk mode and stop the kiosk service (see [Usage](#usage)).
 
-2. Troubleshoot/Debug.
+2. If you have write-protection enabled for your MicroSD card, disable it (see [Security](#security)).
+
+3. Troubleshoot/Debug.
 
    * Identify the problem. What is not working? Is it the kiosk itself (e.g. the kiosk is not starting up, has crashed/frozen, etc) or its functionality (e.g. the kiosk is not resetting)?
    * Identify the root cause. What is causing the problem and where? If it is the kiosk itself that is not working, check for errors in the kiosk service log. If it is a functionality, check for errors in Chrome extension.
    * Rectify the problem. If there are any errors found in the kiosk service log or Chrome extension, address and fix those. Otherwise, try rebooting and trace back the steps that has/could have resulted in the problem.
 
-3. Start the kiosk service (see [Usage](#usage)).
+4. Start the kiosk service (see [Usage](#usage)).
 
-4. Test and verify that the problem has been resolved.
+5. Test and verify that the problem has been resolved.
 
-5. If all looks good, reboot your Raspberry Pi.
+6. If all looks good, reboot your Raspberry Pi.
 
    ```bash
    sudo reboot
    ```
+
+7. If required, re-enable write-protection for your MicroSD card (see [Security](#security)).
 
 
 ### Kiosk service log
@@ -775,21 +828,21 @@ The disable command is temporary and the USB ports will be enabled again after t
 
 1. Open a Chromium window, and go to **Manage extensions** by typing into the address bar `chrome://extensions`, or by opening Extensions menu by clicking the puzzle button:
 
-   <img src=".assets/images/chrome-extensions/manage-extensions.png" alt="Manage Extensions" style="zoom:50%; border: 1px solid #ccc;" />
+   <kbd><img src=".assets/images/chrome-extensions/manage-extensions.png" alt="Manage Extensions" width="60%" /></kbd>
 
 2. Turn on **Developer mode**.
 
-   <img src=".assets/images/chrome-extensions/developer-mode-on.png" alt="Developer mode" style="zoom:50%; border: 1px solid #ccc;" />
+   <kbd><img src=".assets/images/chrome-extensions/developer-mode-on.png" alt="Developer mode" width="60%" /></kbd>
 
 3. Open a new tab and go to any webpage.
 
 4. Return to **Manage extensions**, and if there are any errors, you will see flagged up like this:
 
-   <img src=".assets/images/chrome-extensions/extension-error.png" alt="Developer mode" style="zoom:50%; border: 1px solid #ccc;" />
+   <kbd><img src=".assets/images/chrome-extensions/extension-error.png" alt="Developer mode" width="60%" /></kbd>
 
 5. Click **Errors** to see the details.
 
-   <img src=".assets/images/chrome-extensions/extension-error-details.png" alt="Developer mode" style="zoom:50%; border: 1px solid #ccc;" />
+   <kbd><img src=".assets/images/chrome-extensions/extension-error-details.png" alt="Developer mode" width="60%" /></kbd>
 
 <br /><br />
 
