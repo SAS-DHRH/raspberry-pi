@@ -229,12 +229,12 @@ As we did in the previous step, we are using the `--no-install-recommends` optio
 1. Add the following to the file. You can skip the comments and/or add your own.
 
    ```bash      
-   # Display settings
+   # X Window System display settings
    xset -dpms      # turn off display power management
    xset s noblank  # turn off screen blanking
    xset s off      # turn off screen saver
    
-   # X server settings
+   # X Window System keyboard settings
    setxkbmap -option terminate:ctrl_alt_bksp # allow termination with the Ctrl+Alt+Backspace key combo
    
    # Window settings

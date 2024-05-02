@@ -54,7 +54,7 @@
 
    **Storage**: Select your MicroSD card.
 
-1. In the **Use OS customisation?** prompt window, select **EDIT SETTINGS**.
+1. In the **Use OS customisation?** window, select **EDIT SETTINGS**.
 
 1. In the **OS Customisation** window, configure the following settings, and when you are done, click **SAVE** to save your customisation settings and close the window.
 
@@ -702,9 +702,9 @@ The disable command is temporary and the USB ports will be enabled again after t
    sudo reboot
    ```
 
-### Enable/disable write-protection for SD card
+### Enable/disable write-protection for MicroSD card
 
-##### Enable write-protection (make SD card read-only)
+##### Enable write-protection (make MicroSD card read-only)
 
 1. Start the **raspi-config Tool**.
 
@@ -734,7 +734,7 @@ The disable command is temporary and the USB ports will be enabled again after t
 
 1. When asked **Would you like to reboot now?**, select **\<Yes>** and press the Enter key.
 
-##### Disable write-protection (make SD card writable)
+##### Disable write-protection (make MicroSD card writable)
 
 1. Start the **raspi-config Tool**.
 

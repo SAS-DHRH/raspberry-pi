@@ -87,7 +87,7 @@
 
 1. Open **fullpageos-wpa-supplicant.txt** and configure your WiFi setting.
 
-   If you are using a secure WiFi, uncomment the network setting under `##WPA/WPA2 secured` and replace the placeholder text with your own WiFi SSID (the name of your WiFi network e.g. 'Cats Cats Cats') and psk (the password for your WiFi network e.g. 'ilovecats') e.g.
+   If you are using a secure WiFi, uncomment the network setting under `## WPA/WPA2 secured` and replace the placeholder text with your own WiFi SSID (the name of your WiFi network e.g. 'Cats Cats Cats') and psk (the password for your WiFi network e.g. 'ilovecats') e.g.
 
    ```bash
    ## WPA/WPA2 secured
@@ -97,7 +97,7 @@
    }
    ```
 
-   If you are using an open/unsecure WiFi, uncomment the network setting under `##Open/unsecured` and replace the placeholder text with your own WiFi SSID (the name of your WiFi network e.g. 'UoL Conferences') e.g.
+   If you are using an open/unsecure WiFi, uncomment the network setting under `## Open/unsecured` and replace the placeholder text with your own WiFi SSID (the name of your WiFi network e.g. 'UoL Conferences') e.g.
 
    ```bash
    ## Open/unsecured
