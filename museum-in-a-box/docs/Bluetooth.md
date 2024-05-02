@@ -138,7 +138,8 @@ Before connecting a Bluetooth device with Raspberry Pi or troubleshoot Bluetooth
 
 For the steps in this section, we'll be using 8bitdo Cube Speaker as an example Bluetooth device:
 
-<img src=".assets/images/8bitdo-cube-speaker.jpg" alt="8bitdo Cube Speaker" width="20%;" />
+<img src=".assets/images/8bitdo-cube-speaker.jpg" alt="8bitdo Cube Speaker" width="20%;" align="left" />
+
 <p>Example speaker: 8bitdo Cube Speaker</p>
 
 1. Turn on your bluetooth device and put it into pairing mode.

@@ -51,7 +51,8 @@ If you are using Raspberry Pi Zero W/2W, you will additionally need:
 
 We will be using a module that operates on 13.56MHz frequency e.g.:
 
-<img src="docs/.assets/images/waveshare-pn532-nfc-hat.jpg" alt="Waveshare PN532 NFC HAT" width="30%" />
+<img src="docs/.assets/images/waveshare-pn532-nfc-hat.jpg" alt="Waveshare PN532 NFC HAT" width="30%" align="left" />
+
 <p><b>Waveshare PN532 NFC HAT for Raspberry Pi</b>, around £18. Plug-and-play, no soldering nor extras required.</p>
 
 <img src="docs/.assets/images/rfid-rc522.jpg" alt="RFID RC522 module" width="30%" /> <img src="docs/.assets/images/jumper-wires-socket-to-socket.jpg" alt="RFID RC522 module" width="30%" />
