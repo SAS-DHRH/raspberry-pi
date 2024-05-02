@@ -51,17 +51,12 @@ If you are using Raspberry Pi Zero W/2W, you will additionally need:
 
 We will be using a module that operates on 13.56MHz frequency e.g.:
 
-<figure style="width: 95%;">
-  <img src="docs/.assets/images/waveshare-pn532-nfc-hat.jpg" alt="Waveshare PN532 NFC HAT" style="zoom:50%" />
-  <figcaption style="font-size: .8em"><b>Waveshare PN532 NFC HAT for Raspberry Pi</b>, around £18. Plug-and-play, no soldering nor extras required.</figcaption>
-</figure>
+<img src="docs/.assets/images/waveshare-pn532-nfc-hat.jpg" alt="Waveshare PN532 NFC HAT" width="30%" />
+<p><b>Waveshare PN532 NFC HAT for Raspberry Pi</b>, around £18. Plug-and-play, no soldering nor extras required.</p>
 
-<figure style="width: 95%;">
-  <img src="docs/.assets/images/rfid-rc522.jpg" alt="RFID RC522 module" style="zoom:25%" />
-  <img src="docs/.assets/images/jumper-wires-socket-to-socket.jpg" alt="RFID RC522 module" style="zoom:25%" />
-  <figcaption style="font-size: .8em;"><b>RFID RC522 module</b>, around £5. Requires header pin soldering and 8 noodles of socket-to-socket (also referred to as F/F or female-to-female) jumper wires to connect to Raspberry Pi.</figcaption>
-</figure>
+<img src="docs/.assets/images/rfid-rc522.jpg" alt="RFID RC522 module" width="30%" /> <img src="docs/.assets/images/jumper-wires-socket-to-socket.jpg" alt="RFID RC522 module" width="30%" />
 
+<p><b>RFID RC522 module</b>, around £5. Requires header pin soldering and 8 noodles of socket-to-socket (also referred to as F/F or female-to-female) jumper wires to connect to Raspberry Pi</p>
 
 ### 3. NFC stickers
 
@@ -100,7 +95,7 @@ As we will only be using the chip UID (manufacturer supplied read-only unique id
 1. [Install Raspberry Pi OS](docs/Raspberry-Pi-OS.md)
 2. Install RFID Reader module:
    * [Waveshare PN532 NFC HAT](docs/Waveshare-PN532-NFC-HAT.md)
-   * [RFID RC522](docs/RFID-RC522.md)
+   * [RFID RC522](docs/RC522-RFID.md)
 3. [Install Phoniebox](docs/Phoniebox.md)
 4. [Set up Bluetooth speaker](docs/Bluetooth.md)
 5. [Test system audio output](docs/Audio.md)
